@@ -53,7 +53,7 @@ couvre ce cas (`test_parser.py`).
 - **Limite :** `d=` peut être n'importe quel domaine, pas forcément celui du `From:`.
 
 ### DMARC (RFC 7489)
-- **Principe :** DMARC relie SPF et DKIM au `From:` visible grâce à l'**alignement**. DMARC réussit si SPF ou DKIM réussit **et** si leur domaine correspond (même domaine organisationnel) au domaine du `From:`.
+- **Principe :** DMARC relie SPF et DKIM au `From:` visible grâce à l'**alignement**. DMARC réussit si SPF ou DKIM réussit **et** si leur domaine correspond au domaine du `From:`. Par défaut l'alignement est *relâché* (`aspf=r`/`adkim=r` : même domaine organisationnel, `mail.exemple.com` s'aligne avec `exemple.com`) ; en mode *strict* (`aspf=s`/`adkim=s`) il faut le domaine exact.
 - **Politiques :** le propriétaire du domaine publie `p=none` (surveillance), `p=quarantine` (spam) ou `p=reject` (rejet), dans `_dmarc.domaine`.
 - **Lecture :** un `dmarc=fail` signifie que le `From:` est très probablement usurpé (poids 30 dans l'outil).
 
@@ -64,6 +64,14 @@ en-têtes sont ajoutés **en haut**. L'outil ne fait donc confiance qu'à l'en-t
 haut**, celui que ta passerelle a ajouté en dernier, ou à celui dont l'`authserv-id`
 correspond à `--authserv-id`. L'échantillon 06 contient un faux en-tête `dmarc=pass` plus
 bas : il est ignoré.
+
+**Nuance importante (question piège d'entretien) :** la règle « le plus haut » n'est sûre
+que si ta passerelle ajoute **réellement** un `Authentication-Results` à chaque message. Si
+elle n'en ajoute pas, le plus haut peut être celui de l'attaquant. En production, on passe
+donc toujours `--authserv-id`, et la RFC 8601 (section 5) demande à la passerelle de
+supprimer les en-têtes entrants qui portent déjà son propre identifiant. Microsoft 365 écrit
+son en-tête sans authserv-id (`Authentication-Results: spf=pass ...`) : dans ce cas, c'est la
+règle « le plus haut » qui s'applique.
 
 **Point clé d'entretien :** « SPF/DKIM/DMARC = pass » **ne veut pas dire** « légitime ».
 L'échantillon 03 passe les trois contrôles, parce que l'attaquant possède le domaine sosie
@@ -83,8 +91,8 @@ est suspect : c'est un domaine jetable ou déjà supprimé.
 |---|---|
 | **Reply-To ≠ From** | La victime croit répondre au PDG ou à la banque, mais sa réponse part chez l'attaquant. C'est typique de la fraude au président (BEC). |
 | **Return-Path ≠ From** | C'est l'adresse de rebond (enveloppe). C'est **normal** pour les newsletters envoyées par un ESP (Mailchimp, Sendgrid...), d'où son poids faible (5). Cela devient significatif avec un SPF ou un DMARC en échec. |
-| **Nom affiché contenant une autre adresse** | Exemple : `"support@microsoft.com" <helpdesk@m365-alerts.test>`. Sur mobile, seul le nom s'affiche. Technique T1656 (Impersonation). |
-| **Nom affiché = marque, domaine non officiel** | « PayPal Service » envoyé depuis `paypa1.test`. |
+| **Nom affiché contenant une autre adresse** | Exemple : `"support@microsoft.com" <helpdesk@m365-alerts.test>`. Sur mobile, seul le nom s'affiche. Techniques T1684.002 (Email Spoofing) et T1684.001 (Impersonation). |
+| **Nom affiché = marque, domaine non officiel** | « PayPal Service » envoyé depuis `paypa1.test`, ou « Microsoft Security » depuis une adresse `@outlook.com` : `outlook.com`/`gmail.com` appartiennent bien à Microsoft/Google, mais n'importe qui peut y ouvrir une boîte. L'IOC retenu est alors l'adresse, jamais le fournisseur (on ne bloque pas `gmail.com`). |
 | **Titre de dirigeant + domaine externe** | « Karim - PDG » qui écrit depuis un domaine différent de celui du destinataire : un vrai PDG écrit depuis le domaine de l'entreprise. |
 | **Message-ID d'un autre domaine** | Signal faible : beaucoup de services tiers font pareil. |
 
@@ -114,7 +122,8 @@ un domaine qui ressemble à la marque.
 
 Un domaine officiel, ou un sous-domaine d'un domaine officiel (`www.paypal.com`), n'est
 **jamais** signalé. La liste se trouve dans `data/brands.json` : banques marocaines
-(Attijariwafa, Bank of Africa, CIH, Banque Populaire, BMCI, CDM, SG Maroc, Al Barid Bank),
+(Attijariwafa, Bank of Africa, CIH, Banque Populaire, BMCI, Crédit du Maroc, Saham Bank ex-SG Maroc,
+Crédit Agricole du Maroc, Al Barid Bank),
 opérateurs, DGI, CNSS, et grandes marques. **Il faut la vérifier et l'adapter** à
 l'organisation que tu protèges.
 
@@ -235,9 +244,13 @@ intel. Faire une analyse statique (magic bytes, `olevba` pour les macros, `pdfid
 besoin une détonation dans une sandbox isolée. Mon outil ne fait que l'étape statique.
 
 **10. Quelles techniques MITRE ATT&CK associes-tu au phishing ?**
-T1566.001 (pièce jointe), T1566.002 (lien), T1598.003 (phishing pour voler des
-informations), T1656 (Impersonation), T1036.007 (double extension), T1204.001/.002
-(exécution par l'utilisateur), et T1583.001 (achat de domaines) côté préparation.
+T1566.001 (pièce jointe), T1566.002 (lien), T1566.003 (via un service : LinkedIn, Teams,
+WhatsApp...), T1598.003 (phishing pour voler des informations), T1534 (Internal
+Spearphishing, depuis une boîte interne compromise), T1684.001 (Impersonation) et
+T1684.002 (Email Spoofing), T1036.007 (double extension), T1204.001/.002 (exécution par
+l'utilisateur), et T1583.001 (achat de domaines) côté préparation. À savoir : ATT&CK v19
+(avril 2026) a révoqué T1656 *Impersonation* et T1672 *Email Spoofing* et les a déplacées
+sous T1684 *Social Engineering* ; beaucoup de règles SIEM utilisent encore les anciens ids.
 
 **11. Quelle différence entre `~all` et `-all` dans SPF ?**
 `-all` (fail) demande de rejeter les serveurs non listés. `~all` (softfail) demande
@@ -276,6 +289,6 @@ Content-Security-Policy stricte et affiche les URLs défangées.
 > un e-mail suspect (.eml) : SPF/DKIM/DMARC, chaîne Received, domaines sosies
 > (homoglyphes/punycode/typosquatting), liens, pièces jointes en statique, leviers FR/EN. Il
 > produit un score de risque expliqué et relié à MITRE ATT&CK, un rapport JSON/HTML et des IOC
-> défangés. 84 tests pytest ; validé sur des échantillons synthétiques.
+> défangés. 92 tests pytest ; validé sur des échantillons synthétiques.
 
 (Ne prétends pas qu'il a été utilisé en production ni validé sur des mails réels : ce n'est pas le cas.)

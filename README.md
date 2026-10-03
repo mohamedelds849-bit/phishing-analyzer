@@ -61,20 +61,20 @@ scorer adds them up.
 
 | Category | Finding id | Weight | What triggers it | ATT&CK |
 |---|---|---|---|---|
-| Auth | `dmarc_fail` | 30 | DMARC=fail in the trusted Authentication-Results | T1656, T1566 |
-| Auth | `spf_fail` / `spf_softfail` | 15 / 8 | SPF fail / softfail (also from Received-SPF) | T1566 |
+| Auth | `dmarc_fail` | 30 | DMARC=fail in the trusted Authentication-Results | T1684.002, T1566 |
+| Auth | `spf_fail` / `spf_softfail` | 15 / 8 | SPF fail / softfail (also from Received-SPF) | T1684.002 (fail), T1566 |
 | Auth | `dkim_fail` | 10 | A DKIM signature is present but invalid, with no other DKIM pass | T1566 |
 | Auth | `auth_none` / `auth_missing` | 8 / 5 | No SPF/DKIM/DMARC result at all, or no auth headers | T1566 |
-| Auth | `dkim_not_aligned` | 5 | DKIM passes for a different organisational domain than From | T1656 |
+| Auth | `dkim_not_aligned` | 5 | DKIM passes for a different organisational domain than From | T1684.001 |
 | Auth | `auth_untrusted` | 5 | No header from the `--authserv-id` you trust | - |
 | Auth | `auth_pass` | 0 | Informational: the message passed, which **does not** mean it is legitimate | - |
-| Header | `display_name_spoof` | 25 | The display name contains another address, e.g. `"support@microsoft.com" <x@evil.test>` | T1656 |
-| Header | `reply_to_mismatch` | 20 | The Reply-To organisational domain is not the From domain | T1656, T1566 |
-| Header | `brand_display_name` | 20 | The display name claims a protected brand from a non-official domain | T1656 |
-| Header | `exec_impersonation` | 15 | An executive title (PDG/CEO/DG/DAF...) from a domain outside the recipient's organisation | T1656 |
+| Header | `display_name_spoof` | 25 | The display name contains another address, e.g. `"support@microsoft.com" <x@evil.test>` | T1684.002, T1684.001 |
+| Header | `reply_to_mismatch` | 20 | The Reply-To organisational domain is not the From domain | T1684.001, T1566 |
+| Header | `brand_display_name` | 20 | The display name claims a protected brand from a non-official domain, or from a consumer free-mail address (`"Microsoft Security" <x@outlook.com>`) | T1684.001 |
+| Header | `exec_impersonation` | 15 | An executive title (PDG/CEO/DG/DAF...) from a domain outside the recipient's organisation | T1684.001 |
 | Header | `return_path_mismatch` | 5 | The envelope sender's domain is not the From domain. Low weight because e-mail service providers do this normally | T1566 |
 | Header | `received_missing`, `received_time_travel`, `date_anomaly`, `message_id_mismatch` | 3 to 5 | Hop-chain and timestamp sanity checks | - |
-| Lookalike | `lookalike_homoglyph` | 30 | A hostname token whose confusable skeleton equals a brand, e.g. `paypa1`, Cyrillic `а` | T1583.001 + T1566.002 / T1656 |
+| Lookalike | `lookalike_homoglyph` | 30 | A hostname token whose confusable skeleton equals a brand, e.g. `paypa1`, Cyrillic `а` | T1583.001 + T1566.002 / T1684.001 |
 | Lookalike | `lookalike_typosquat` | 25 | Damerau-Levenshtein distance ≤1 from a brand keyword of 6+ chars (≤2 for 9+ chars), same first letter | T1583.001 |
 | Lookalike | `lookalike_punycode_mixed_script` / `lookalike_punycode` | 25 / 12 (10 when a brand match already explains it) | `xn--` label; scripts mixed after decoding | T1583.001, T1566.002 |
 | Lookalike | `lookalike_brand_wrong_domain` / `lookalike_brand_in_hostname` | 20 / 15 | The brand name appears in a hostname that is not on the official list | T1583.001 |
@@ -93,9 +93,9 @@ scorer adds them up.
 | Attachment | `att_archive_risky` / `att_archive_encrypted` | 25 / 15 | The ZIP listing contains a script or executable; the ZIP is password-protected | T1566.001 |
 | Attachment | `att_html` | 20 | .html/.svg attachment (credential page, HTML smuggling) | T1027.006 |
 | Attachment | `att_ole_office` / `att_archive` | 8 / 8 | Legacy OLE Office file; archive that cannot be listed (RAR/7z) | T1566.001 |
-| Content | `kw_credential` / `kw_payment` | 15 / 15 | FR+EN credential requests; payment or bank-detail changes (RIB/IBAN/virement) | T1598.003 / T1656 |
-| Content | `kw_urgency` / `kw_threat` / `kw_secrecy` | 10 each | Deadlines, account-suspension threats, "confidentiel / je suis en réunion" | T1566 / T1656 |
-| Content | `bec_pattern` | 15 | Payment request plus urgency or secrecy, with **no link and no attachment** (a CEO-fraud mail has no payload) | T1656, T1566 |
+| Content | `kw_credential` / `kw_payment` | 15 / 15 | FR+EN credential requests; payment or bank-detail changes (RIB/IBAN/virement) | T1598.003 / T1684.001 |
+| Content | `kw_urgency` / `kw_threat` / `kw_secrecy` | 10 each | Deadlines, account-suspension threats, "confidentiel / je suis en réunion" | T1566 / T1684.001 |
+| Content | `bec_pattern` | 15 | Payment request plus urgency or secrecy, with **no link and no attachment** (a CEO-fraud mail has no payload) | T1684.001, T1566 |
 | DNS (`--online`) | `sender_domain_nxdomain`, `sender_no_spf`, `sender_spf_permissive`, `sender_no_dmarc`, `sender_dmarc_none` | 15 / 8 / 10 / 8 / 3 | Public TXT records of the From organisational domain | T1566 |
 
 **Trust model for authentication headers.** An attacker can write their own
@@ -103,6 +103,18 @@ scorer adds them up.
 **topmost** header, which your own gateway adds last, or the first header whose
 authserv-id matches `--authserv-id`. Sample 06 includes a forged lower header that the
 tool ignores.
+
+The "topmost" default is only safe **if your gateway really adds an
+Authentication-Results header** to every inbound message. If it does not (or the `.eml`
+was exported from somewhere else), the topmost header may be the attacker's own. In
+production, always pass `--authserv-id` with your gateway's id; RFC 8601 section 5 also
+asks the gateway to delete inbound headers that already carry its own id. Microsoft 365
+writes its header without an authserv-id (`Authentication-Results: spf=pass ...`), so
+`--authserv-id` cannot match it; there the default "topmost" rule applies.
+
+**ATT&CK version.** Technique ids follow ATT&CK v19 (April 2026), which revoked T1656
+*Impersonation* and T1672 *Email Spoofing* and moved them to T1684.001 and T1684.002
+under T1684 *Social Engineering*. Older SIEM rules may still use the old ids.
 
 ## Installation and usage
 
@@ -167,17 +179,17 @@ Example reports from real runs: [`examples/02_obvious_phishing.html`](examples/0
  VERDICT     : LIKELY PHISHING   score 85/100
 
 -- Findings (6 scored, 1 informational) --------------------
- [MEDIUM   +20] Reply-To points to a different domain  [T1656, T1566]
+ [MEDIUM   +20] Reply-To points to a different domain  [T1684.001, T1566]
       why : Replies will go to a different organisation than the visible sender. Attackers use this so the victim's answer (or payment confirmation) reaches a mailbox they control, while From: looks trustworthy.
       seen: From=direction-acme.test  Reply-To=k.testouni@securemail-pdg.test
- [HIGH     +15] Business Email Compromise (CEO/invoice fraud) pattern  [T1656, T1566]
+ [HIGH     +15] Business Email Compromise (CEO/invoice fraud) pattern  [T1684.001, T1566]
       why : Payment request + pressure/secrecy, with no link and no attachment: the attack is the conversation itself, which link and attachment scanners cannot catch. Verify out-of-band (call the requester on a known number) before any transfer.
       seen: keyword groups: payment, secrecy, urgency; header signals: reply_to_mismatch, exec_impersonation
- [MEDIUM   +15] Executive title used by an external sender  [T1656]
+ [MEDIUM   +15] Executive title used by an external sender  [T1684.001]
       ...
- [MEDIUM   +15] Payment / banking change request  [T1656]
+ [MEDIUM   +15] Payment / banking change request  [T1684.001]
       seen: matched: 'virement', 'rib', 'iban', 'nouveau rib'
- [LOW      +10] Secrecy / isolation request  [T1656]
+ [LOW      +10] Secrecy / isolation request  [T1684.001]
       seen: matched: 'confidentielle', 'n'en parle a personne', 'je suis en reunion', 'pas joignable'
  [LOW      +10] Urgency pressure  [T1566]
       seen: matched: 'urgent', 'des que possible', 'aujourd'hui meme'
@@ -192,7 +204,7 @@ Example reports from real runs: [`examples/02_obvious_phishing.html`](examples/0
  domain * securemail-pdg[.]test
  ip       198[.]51[.]100[.]140  (received-chain)
 
- ATT&CK: T1566 Phishing; T1656 Impersonation
+ ATT&CK: T1566 Phishing; T1684.001 Social Engineering: Impersonation
 ```
 
 (`...` marks lines cut from the README; the tool prints them in full.)
@@ -200,13 +212,15 @@ Example reports from real runs: [`examples/02_obvious_phishing.html`](examples/0
 ## Tests
 
 ```bash
-python -m pytest        # 84 tests, all offline (DNS is mocked)
+python -m pytest        # 92 tests, all offline (DNS is mocked)
 ```
 
 The tests cover parsing (encoded words, RFC 2231 file names, garbage input, the
 unquoted-`@` display-name trick), each detector, scoring thresholds, HTML escaping,
-the absence of external resources in the HTML report, the CLI exit codes, and the expected
-verdict of every sample.
+the absence of external resources in the HTML report, terminal escape sequences in the
+console output, pathological MIME nesting, ZIP padding evasion, the CLI exit codes, and the
+expected verdict of every sample. The sample verdict tests are regression tests: the weights
+were tuned on these same samples, so they do not measure real-world accuracy.
 
 ## Limitations
 
@@ -248,7 +262,7 @@ Il produit un **score de 0 à 100**, un verdict (*Likely safe / Suspicious / Lik
 une explication pour chaque alerte avec sa référence MITRE ATT&CK, un rapport JSON et HTML
 autonome, et la liste des IOC « défangés » prête pour le ticket. Le mode `--online`
 (facultatif) interroge le DNS public pour les enregistrements SPF et DMARC de l'expéditeur.
-Les 7 échantillons fournis sont synthétiques, et les 84 tests passent hors ligne. Les limites
+Les 7 échantillons fournis sont synthétiques, et les 92 tests passent hors ligne. Les limites
 sont listées plus haut : le score est heuristique et non validé sur un corpus réel, et la
 signature DKIM n'est pas re-vérifiée. Voir **LEARN.md** pour les explications détaillées en français.
 

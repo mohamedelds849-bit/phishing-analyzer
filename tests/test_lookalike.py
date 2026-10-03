@@ -59,3 +59,12 @@ def test_no_false_positive_on_unrelated(brands):
 def test_short_keywords_only_exact_tokens(brands):
     assert kinds("dhl-livraison.test", brands) == {"brand_in_hostname"}
     assert check_domain("adhlong.test", brands) == []
+
+
+def test_verified_moroccan_bank_domains_are_official(brands):
+    # verified 2026-10 (security review): CDM's site is creditdumaroc.ma,
+    # Attijarinet lives on attijariwafa.com, SG Maroc became Saham Bank (2025)
+    for host in ("www.creditdumaroc.ma", "attijarinet.attijariwafa.com", "www.sahambank.com",
+                 "www.creditagricole.ma", "www.bankofafrica.ma", "www.cihbank.ma", "www.groupebcp.com"):
+        assert check_domain(host, brands) == [], host
+    assert check_domain("sahambank-securite.test", brands)

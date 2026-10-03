@@ -69,3 +69,10 @@ def test_disk_image_html_and_ole():
 
 def test_non_zip_archive_low():
     assert ids("files.rar", b"Rar!\x1a\x07\x00") == {"att_archive"}
+
+
+def test_zip_payload_hidden_behind_many_dummy_entries():
+    # review fix: the listing used to stop after 2000 entries, so a payload
+    # placed after 5000 dummy files was never seen
+    data = zip_bytes([f"f{i}.txt" for i in range(5000)] + ["payload.js"])
+    assert "att_archive_risky" in ids("photos.zip", data)

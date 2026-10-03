@@ -12,7 +12,7 @@ from email.utils import parsedate_to_datetime
 from .lookalike import BrandList
 from .models import Finding
 from .parser import ParsedEmail
-from .util import EMAIL_RE, is_ip, normalize_text, org_domain
+from .util import EMAIL_RE, FREEMAIL_DOMAINS, is_ip, normalize_text, org_domain
 
 EXEC_TITLE_RE = re.compile(
     r"\b(pdg|ceo|cfo|coo|dg|daf|president|presidente|directeur general|directrice generale|"
@@ -134,8 +134,8 @@ def analyze_headers(email: ParsedEmail, brands: BrandList) -> tuple[list[Hop], l
                              "Replies will go to a different organisation than the visible sender. "
                              "Attackers use this so the victim's answer (or payment confirmation) "
                              "reaches a mailbox they control, while From: looks trustworthy.",
-                             f"From={from_dom}  Reply-To={rt.address}", ["T1656", "T1566"],
-                             iocs=[rt.domain]))
+                             f"From={from_dom}  Reply-To={rt.address}", ["T1684.001", "T1566"],
+                             iocs=[rt.address] if org_domain(rt.domain) in FREEMAIL_DOMAINS else [rt.domain]))
             break
 
     # --- Return-Path (envelope sender) ----------------------------------
@@ -158,16 +158,23 @@ def analyze_headers(email: ParsedEmail, brands: BrandList) -> tuple[list[Hop], l
                              "Most mail clients show only the display name. Here it contains an address "
                              "that is NOT the real sender, so the user sees a trusted address while the "
                              "message actually comes from elsewhere.",
-                             f"display='{dn}'  real=<{frm.address}>", ["T1656"], iocs=[from_dom]))
+                             f"display='{dn}'  real=<{frm.address}>", ["T1684.002", "T1684.001"], iocs=[from_dom]))
         # --- Display name claims a protected brand from a non-official domain
         for b in brands.brands:
             hit = next((w for w in b.display_names if re.search(r"\b" + re.escape(normalize_text(w)) + r"\b", ndn)), None)
-            if hit and not b.is_official(from_dom):
+            freemail = from_org in FREEMAIL_DOMAINS
+            if hit and (freemail or not b.is_official(from_dom)):
+                reason = (f"'{from_dom}' is a public free-mail service: anyone can open a mailbox there, "
+                          f"and {b.name} does not send official mail from personal accounts."
+                          if freemail else
+                          f"the address domain '{from_dom}' is not one of {b.name}'s official domains "
+                          f"({', '.join(b.domains)}).")
                 f.append(Finding("brand_display_name", "header", f"Display name impersonates {b.name}",
                                  "high", 20,
-                                 f"The sender name says '{dn}' but the address domain '{from_dom}' is not "
-                                 f"one of {b.name}'s official domains ({', '.join(b.domains)}).",
-                                 f"display='{dn}'  real=<{frm.address}>", ["T1656"], iocs=[from_dom]))
+                                 f"The sender name says '{dn}' but {reason}",
+                                 f"display='{dn}'  real=<{frm.address}>", ["T1684.001"],
+                                 # never flag a whole free-mail provider as an IOC to block
+                                 iocs=[frm.address] if freemail else [from_dom]))
                 break
         # --- Executive title from an external domain (CEO fraud) ------------
         rcpt_orgs = {org_domain(a.domain) for a in email.to + email.cc if a.domain}
@@ -178,7 +185,7 @@ def analyze_headers(email: ParsedEmail, brands: BrandList) -> tuple[list[Hop], l
                              "address is outside the recipient's organisation. Real executives normally "
                              "write from the corporate domain - a hallmark of CEO fraud / BEC.",
                              f"display='{dn}' from={from_dom} recipient domain(s)={', '.join(sorted(rcpt_orgs))}",
-                             ["T1656"], iocs=[from_dom]))
+                             ["T1684.001"], iocs=[from_dom]))
 
     # --- Message-ID domain ---------------------------------------------------
     mid = email.message_id.strip("<> ")

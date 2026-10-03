@@ -152,6 +152,13 @@ def _decode_text(part) -> str:
 def parse_bytes(data: bytes) -> ParsedEmail:
     if len(data) > MAX_EML_BYTES:
         raise ValueError(f"message too large ({len(data)} bytes > {MAX_EML_BYTES})")
+    try:
+        return _parse_bytes(data)
+    except RecursionError as e:  # pathological MIME nesting (thousands of levels)
+        raise ValueError("MIME structure too deeply nested to analyse safely") from e
+
+
+def _parse_bytes(data: bytes) -> ParsedEmail:
     msg = BytesParser(policy=policy.default).parsebytes(data)
 
     headers: list[tuple[str, str]] = []

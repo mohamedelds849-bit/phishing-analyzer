@@ -114,12 +114,12 @@ def analyze_auth(email: ParsedEmail, authserv_id: str | None = None) -> tuple[di
         f.append(Finding("dmarc_fail", "auth", "DMARC failed", "high", 30,
                          "DMARC checks that the visible From: domain is backed by an aligned SPF or DKIM "
                          "pass. A failure means the sender is very likely NOT the domain shown in From: "
-                         "(direct domain spoofing).", ev, ["T1656", "T1566"]))
+                         "(direct domain spoofing).", ev, ["T1684.002", "T1566"]))
     if spf in ("fail",):
         f.append(Finding("spf_fail", "auth", "SPF failed", "medium", 15,
                          "The sending server's IP is not authorised by the envelope-sender domain's SPF "
                          "record (-all). The message did not come from that domain's infrastructure.",
-                         ev, ["T1566"]))
+                         ev, ["T1684.002", "T1566"]))
     elif spf == "softfail":
         f.append(Finding("spf_softfail", "auth", "SPF softfail", "low", 8,
                          "SPF returned softfail (~all): the IP is probably not authorised, but the domain "
@@ -140,7 +140,7 @@ def analyze_auth(email: ParsedEmail, authserv_id: str | None = None) -> tuple[di
                              "The valid DKIM signature belongs to a different organisational domain than "
                              "the From: address, so it does not vouch for the visible sender (common with "
                              "bulk-mail providers, but also with spoofing).",
-                             f"From={from_dom} DKIM d={','.join(s['dkim_domains'])}", ["T1656"]))
+                             f"From={from_dom} DKIM d={','.join(s['dkim_domains'])}", ["T1684.001"]))
 
     if spf == "pass" and dkim == "pass" and dmarc == "pass":
         f.append(Finding("auth_pass", "auth", "SPF, DKIM and DMARC all pass", "info", 0,

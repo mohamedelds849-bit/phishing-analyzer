@@ -17,6 +17,17 @@ MULTI_PART_SUFFIXES = {
     "gouv.fr", "asso.fr", "co.nz",
 }
 
+# Consumer free-mail providers: anyone can open an address there, so a mailbox
+# on gmail.com / outlook.com never proves it belongs to the brand (Google,
+# Microsoft...) even though the domain itself is official for that brand.
+FREEMAIL_DOMAINS = {
+    "gmail.com", "googlemail.com", "outlook.com", "outlook.fr", "hotmail.com", "hotmail.fr",
+    "live.com", "live.fr", "msn.com", "yahoo.com", "yahoo.fr", "ymail.com", "icloud.com",
+    "me.com", "mac.com", "aol.com", "gmx.com", "gmx.fr", "gmx.de", "proton.me",
+    "protonmail.com", "yandex.com", "yandex.ru", "mail.ru", "zoho.com", "laposte.net",
+    "wanadoo.fr", "free.fr", "sfr.fr", "menara.ma",
+}
+
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+\-]+@[A-Za-z0-9\-]+(?:\.[A-Za-z0-9\-]+)+")
 
 # Bidirectional / invisible formatting characters abused in file names.

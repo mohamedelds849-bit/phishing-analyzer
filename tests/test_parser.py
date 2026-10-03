@@ -102,3 +102,11 @@ def test_util_helpers():
     assert org_domain("192.0.2.1") == "192.0.2.1"
     assert defang_url("https://evil.test/a.php") == "hxxps://evil[.]test/a.php"
     assert safe_display("a‮b") == "a[U+202E]b"
+
+
+def test_pathological_mime_nesting_is_a_clean_error():
+    import pytest
+    body = b"".join(b"Content-Type: multipart/mixed; boundary=b%d\r\n\r\n--b%d\r\n" % (i, i) for i in range(3000))
+    raw = b"From: a@evil.test\r\nMIME-Version: 1.0\r\n" + body + b"Content-Type: text/plain\r\n\r\nx\r\n"
+    with pytest.raises(ValueError):
+        parse_bytes(raw)

@@ -93,7 +93,9 @@ def to_console(report: dict) -> str:
         L.append("")
         L.append(" ATT&CK: " + "; ".join(f"{t['id']} {t['name']}" for t in report["attack_techniques"]))
     L.append(bar)
-    return "\n".join(L)
+    # Any header/URL/file name may carry ESC or other control characters
+    # (ANSI escape injection into the analyst's terminal): make them visible.
+    return "\n".join(safe_display(line) for line in L)
 
 
 _CSS = """

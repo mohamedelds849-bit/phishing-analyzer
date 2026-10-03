@@ -56,7 +56,7 @@ CATEGORIES: dict[str, dict] = {
         ],
     },
     "payment": {
-        "title": "Payment / banking change request", "severity": "medium", "weight": 15, "attack": ["T1656"],
+        "title": "Payment / banking change request", "severity": "medium", "weight": 15, "attack": ["T1684.001"],
         "why": "Requests to pay, wire money or change bank details are the goal of invoice and CEO "
                "fraud. Always confirm by phone using a number you already know.",
         "patterns": [
@@ -69,7 +69,7 @@ CATEGORIES: dict[str, dict] = {
         ],
     },
     "secrecy": {
-        "title": "Secrecy / isolation request", "severity": "low", "weight": 10, "attack": ["T1656"],
+        "title": "Secrecy / isolation request", "severity": "low", "weight": 10, "attack": ["T1684.001"],
         "why": "Asking to keep the request confidential or saying the sender is unreachable stops the "
                "victim from verifying it - a typical BEC / CEO-fraud pattern.",
         "patterns": [

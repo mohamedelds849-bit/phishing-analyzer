@@ -1,13 +1,14 @@
 {
   "_comment": "Protected brands. 'domains' = official domains (exact or parent of the host => never flagged). 'keywords' = strings compared against hostname labels (typo/homoglyph checks only for keywords >= 6 chars). 'display_names' = words matched in the From display name. Verify official domains for your own organisation before production use; this list is a starting point, not authoritative.",
   "brands": [
-    {"name": "Attijariwafa bank", "domains": ["attijariwafabank.com", "attijarinet.com"], "keywords": ["attijariwafabank", "attijariwafa", "attijari"], "display_names": ["attijariwafa", "attijari"]},
+    {"name": "Attijariwafa bank", "domains": ["attijariwafabank.com", "attijariwafa.com"], "keywords": ["attijariwafabank", "attijariwafa", "attijarinet", "attijari"], "display_names": ["attijariwafa", "attijari"]},
     {"name": "Bank of Africa (BMCE)", "domains": ["bankofafrica.ma", "bmcebank.ma"], "keywords": ["bankofafrica", "bmcebank", "bmce"], "display_names": ["bank of africa", "bmce"]},
     {"name": "CIH Bank", "domains": ["cihbank.ma"], "keywords": ["cihbank", "cih"], "display_names": ["cih bank", "cih"]},
     {"name": "Banque Populaire", "domains": ["groupebcp.com"], "keywords": ["banquepopulaire", "groupebcp", "chaabi"], "display_names": ["banque populaire", "chaabi"]},
     {"name": "BMCI", "domains": ["bmci.ma"], "keywords": ["bmci"], "display_names": ["bmci"]},
-    {"name": "Credit du Maroc", "domains": ["cdm.co.ma"], "keywords": ["creditdumaroc"], "display_names": ["credit du maroc"]},
-    {"name": "Societe Generale Maroc", "domains": ["sgmaroc.com"], "keywords": ["sgmaroc", "societegenerale"], "display_names": ["societe generale"]},
+    {"name": "Credit du Maroc", "domains": ["creditdumaroc.ma", "cdm.co.ma"], "keywords": ["creditdumaroc"], "display_names": ["credit du maroc"]},
+    {"name": "Saham Bank (ex-Societe Generale Maroc)", "domains": ["sahambank.com", "sgmaroc.com"], "keywords": ["sahambank", "sgmaroc", "societegenerale"], "display_names": ["saham bank", "societe generale"]},
+    {"name": "Credit Agricole du Maroc", "domains": ["creditagricole.ma", "credit-agricole.fr", "credit-agricole.com"], "keywords": ["creditagricole"], "display_names": ["credit agricole"]},
     {"name": "Al Barid Bank / Barid Al-Maghrib", "domains": ["albaridbank.ma", "poste.ma"], "keywords": ["albaridbank", "baridbank", "baridalmaghrib"], "display_names": ["al barid", "barid al-maghrib", "barid al maghrib"]},
     {"name": "Maroc Telecom", "domains": ["iam.ma"], "keywords": ["maroctelecom", "iam"], "display_names": ["maroc telecom"]},
     {"name": "inwi", "domains": ["inwi.ma"], "keywords": ["inwi"], "display_names": ["inwi"]},

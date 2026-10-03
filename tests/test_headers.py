@@ -68,3 +68,18 @@ def test_time_travel_and_missing_received(mk, brands):
     assert "received_time_travel" in ids(f)
     _, f = analyze_headers(mk(), brands)
     assert "received_missing" in ids(f)
+
+
+def test_brand_display_name_from_freemail_is_flagged(mk, brands):
+    # gmail.com / outlook.com are "official" Google / Microsoft domains, but
+    # anyone can own a mailbox there
+    _, f = analyze_headers(mk({"From": '"Microsoft Security" <ms.security.team@outlook.com>'}), brands)
+    hit = [x for x in f if x.id == "brand_display_name"]
+    assert hit and "free-mail" in hit[0].why
+    assert hit[0].iocs == ["ms.security.team@outlook.com"]  # never 'block outlook.com'
+
+
+def test_reply_to_freemail_flags_address_not_provider(mk, brands):
+    _, f = analyze_headers(mk({"Reply-To": "boss.private@gmail.com"}), brands)
+    rt = [x for x in f if x.id == "reply_to_mismatch"][0]
+    assert rt.iocs == ["boss.private@gmail.com"]

@@ -25,7 +25,6 @@ DECOY_EXT = {"pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "jpg", "
              "gif", "csv", "rtf", "odt", "mp3", "mp4", "zip"}
 
 OLE_MAGIC = b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1"
-MAX_ZIP_ENTRIES = 2000
 
 
 def _ext_chain(filename: str) -> list[str]:
@@ -40,7 +39,11 @@ def _zip_names(data: bytes) -> tuple[list[str], bool] | None:
         return None
     try:
         with zipfile.ZipFile(io.BytesIO(data)) as z:
-            infos = z.infolist()[:MAX_ZIP_ENTRIES]
+            # Every entry is checked: the central directory is already parsed in
+            # memory by zipfile, and truncating the list would let an attacker
+            # hide 'payload.js' behind thousands of dummy entries. Only NAMES
+            # are read - no member is ever decompressed (zip-bomb safe).
+            infos = z.infolist()
             return [i.filename for i in infos], any(i.flag_bits & 0x1 for i in infos)
     except (zipfile.BadZipFile, ValueError, OSError, NotImplementedError):
         return None

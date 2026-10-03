@@ -6,13 +6,17 @@ from dataclasses import asdict, dataclass, field
 
 SEVERITIES = ("info", "low", "medium", "high", "critical")
 
-# MITRE ATT&CK techniques referenced by the detectors (Enterprise matrix).
+# MITRE ATT&CK techniques referenced by the detectors (Enterprise matrix, v19+).
+# Note: ATT&CK v19 (April 2026) revoked T1656 Impersonation and T1672 Email
+# Spoofing and re-homed them as T1684.001 / T1684.002 under T1684 Social
+# Engineering. Older reports and SIEM rules may still use the old ids.
 ATTACK = {
     "T1566": "Phishing",
     "T1566.001": "Phishing: Spearphishing Attachment",
     "T1566.002": "Phishing: Spearphishing Link",
     "T1598.003": "Phishing for Information: Spearphishing Link",
-    "T1656": "Impersonation",
+    "T1684.001": "Social Engineering: Impersonation",
+    "T1684.002": "Social Engineering: Email Spoofing",
     "T1583.001": "Acquire Infrastructure: Domains",
     "T1036.002": "Masquerading: Right-to-Left Override",
     "T1036.007": "Masquerading: Double File Extension",

@@ -95,3 +95,25 @@ def test_online_dns_policy_parsing():
         ["v=DMARC1; p=none; rua=mailto:r@example.com"] if n.startswith("_dmarc") else ["v=spf1 +all"]))
     assert info["dmarc_policy"] == "none" and info["spf_all"] == "+all"
     assert {f.id for f in dns_findings(info)} == {"sender_spf_permissive", "sender_dmarc_none"}
+
+
+def test_console_neutralises_terminal_escape_sequences(mk, brands):
+    from phishing_analyzer.report import to_console
+    raw = (b"From: a@evil.test\r\nTo: b@corp.example\r\nDate: \x1b[2J\x1b]0;owned\x07\r\n"
+           b"Subject: hi\r\n\r\nsee http://evil.test/\x1b[31mred\r\n")
+    from phishing_analyzer.parser import parse_bytes
+    out = to_console(analyze_email(parse_bytes(raw), brands=brands))
+    assert "\x1b" not in out and "\x07" not in out
+    assert "[U+001B]" in out
+
+
+def test_cli_unwritable_report_path_is_clean_error(tmp_path, capsys):
+    bad = tmp_path / "no-such-dir" / "r.html"
+    assert main([str(SAMPLES / "01_legit_newsletter.eml"), "--html", str(bad)]) == 1
+    assert "cannot write report" in capsys.readouterr().err
+
+
+def test_attack_ids_are_current_v19():
+    from phishing_analyzer.models import ATTACK
+    assert "T1656" not in ATTACK and "T1672" not in ATTACK  # revoked in ATT&CK v19
+    assert ATTACK["T1684.001"].endswith("Impersonation")

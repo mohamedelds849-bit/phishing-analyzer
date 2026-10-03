@@ -3,7 +3,7 @@
     "name": "phishing-analyzer",
     "version": "1.0.0"
   },
-  "analyzed_at": "2026-10-03T00:36:50+00:00",
+  "analyzed_at": "2026-10-03T00:43:36+00:00",
   "source": "samples\\02_obvious_phishing.eml",
   "message": {
     "sha256": "d98dbe2cba79e5c11d524957ce971c551ff7b0acd73fb55e0a58135af147a2ff",
@@ -137,8 +137,8 @@
       "evidence": "spf=fail dkim=none dmarc=fail (authserv-id=mx-in.corp.example)",
       "attack": [
         {
-          "id": "T1656",
-          "name": "Impersonation"
+          "id": "T1684.002",
+          "name": "Social Engineering: Email Spoofing"
         },
         {
           "id": "T1566",
@@ -161,8 +161,8 @@
           "name": "Acquire Infrastructure: Domains"
         },
         {
-          "id": "T1656",
-          "name": "Impersonation"
+          "id": "T1684.001",
+          "name": "Social Engineering: Impersonation"
         }
       ],
       "iocs": [
@@ -202,8 +202,8 @@
       "evidence": "display='PayPal Service'  real=<service@paypa1.test>",
       "attack": [
         {
-          "id": "T1656",
-          "name": "Impersonation"
+          "id": "T1684.001",
+          "name": "Social Engineering: Impersonation"
         }
       ],
       "iocs": [
@@ -220,8 +220,8 @@
       "evidence": "From=paypa1.test  Reply-To=verify-team@mailbox-help.test",
       "attack": [
         {
-          "id": "T1656",
-          "name": "Impersonation"
+          "id": "T1684.001",
+          "name": "Social Engineering: Impersonation"
         },
         {
           "id": "T1566",
@@ -365,6 +365,10 @@
       "evidence": "spf=fail dkim=none dmarc=fail (authserv-id=mx-in.corp.example)",
       "attack": [
         {
+          "id": "T1684.002",
+          "name": "Social Engineering: Email Spoofing"
+        },
+        {
           "id": "T1566",
           "name": "Phishing"
         }
@@ -470,8 +474,12 @@
       "name": "Phishing for Information: Spearphishing Link"
     },
     {
-      "id": "T1656",
-      "name": "Impersonation"
+      "id": "T1684.001",
+      "name": "Social Engineering: Impersonation"
+    },
+    {
+      "id": "T1684.002",
+      "name": "Social Engineering: Email Spoofing"
     }
   ],
   "iocs": {

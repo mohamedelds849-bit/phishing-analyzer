@@ -56,10 +56,14 @@ def main(argv: list[str] | None = None) -> int:
         print(to_json(report))
     else:
         print(to_console(report))
-    if args.json_out:
-        Path(args.json_out).write_text(to_json(report), encoding="utf-8")
-    if args.html:
-        Path(args.html).write_text(to_html(report), encoding="utf-8")
-        if not args.json:
-            print(f"HTML report written to {args.html}")
+    try:
+        if args.json_out:
+            Path(args.json_out).write_text(to_json(report), encoding="utf-8")
+        if args.html:
+            Path(args.html).write_text(to_html(report), encoding="utf-8")
+            if not args.json:
+                print(f"HTML report written to {args.html}")
+    except OSError as e:
+        print(f"error: cannot write report: {e}", file=sys.stderr)
+        return 1
     return EXIT_CODES.get(report["verdict"], 0) if args.exit_code else 0

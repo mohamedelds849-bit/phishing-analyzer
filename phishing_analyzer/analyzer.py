@@ -57,7 +57,7 @@ def _bec_pattern(kw_hits: dict, email: ParsedEmail, links: list, findings: list[
                     "(call the requester on a known number) before any transfer.",
                     f"keyword groups: {', '.join(sorted(kw_hits))}"
                     + (f"; header signals: {', '.join(extra)}" if extra else ""),
-                    ["T1656", "T1566"])]
+                    ["T1684.001", "T1566"])]
 
 
 def _iocs(email: ParsedEmail, links: list, hops, findings: list[Finding]) -> dict:

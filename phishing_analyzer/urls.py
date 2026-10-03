@@ -254,7 +254,7 @@ def lookalike_finding(r: dict, where: str) -> Finding:
         "punycode": "Punycode (IDN) domain",
         "punycode_mixed_script": "Mixed-script IDN domain (homograph)",
     }
-    attack = ["T1583.001", "T1566.002"] if where == "link" else ["T1583.001", "T1656"]
+    attack = ["T1583.001", "T1566.002"] if where == "link" else ["T1583.001", "T1684.001"]
     return Finding(
         id="lookalike_" + r["kind"], category="lookalike",
         title=f"{titles[r['kind']]} ({where})", severity=r["severity"], weight=r["weight"],
