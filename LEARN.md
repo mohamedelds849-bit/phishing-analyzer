@@ -289,6 +289,6 @@ Content-Security-Policy stricte et affiche les URLs défangées.
 > un e-mail suspect (.eml) : SPF/DKIM/DMARC, chaîne Received, domaines sosies
 > (homoglyphes/punycode/typosquatting), liens, pièces jointes en statique, leviers FR/EN. Il
 > produit un score de risque expliqué et relié à MITRE ATT&CK, un rapport JSON/HTML et des IOC
-> défangés. 92 tests pytest ; validé sur des échantillons synthétiques.
+> défangés. 93 tests pytest ; validé sur des échantillons synthétiques.
 
 (Ne prétends pas qu'il a été utilisé en production ni validé sur des mails réels : ce n'est pas le cas.)

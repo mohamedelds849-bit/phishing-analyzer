@@ -45,11 +45,14 @@ def _dnspython_txt(timeout: float = 5.0) -> Callable[[str], list[str]]:
 def spf_qualifier(spf: str | None) -> str | None:
     if not spf:
         return None
-    m = re.search(r"([-~?+])all\b", spf, re.I)
-    if m:
-        return m.group(1) + "all"
-    if re.search(r"\ball\b", spf, re.I):
-        return "+all"
+    # Token-based: only a standalone "all" mechanism counts, so a domain such as
+    # include:spf.all-mail.example or redirect=x-all.example is not misread.
+    for term in spf.split():
+        t = term.lower()
+        if t in ("all", "+all"):
+            return "+all"
+        if len(t) == 4 and t[0] in "-~?" and t[1:] == "all":
+            return t
     return None
 
 

@@ -212,7 +212,7 @@ Example reports from real runs: [`examples/02_obvious_phishing.html`](examples/0
 ## Tests
 
 ```bash
-python -m pytest        # 92 tests, all offline (DNS is mocked)
+python -m pytest        # 93 tests, all offline (DNS is mocked)
 ```
 
 The tests cover parsing (encoded words, RFC 2231 file names, garbage input, the
@@ -262,7 +262,7 @@ Il produit un **score de 0 à 100**, un verdict (*Likely safe / Suspicious / Lik
 une explication pour chaque alerte avec sa référence MITRE ATT&CK, un rapport JSON et HTML
 autonome, et la liste des IOC « défangés » prête pour le ticket. Le mode `--online`
 (facultatif) interroge le DNS public pour les enregistrements SPF et DMARC de l'expéditeur.
-Les 7 échantillons fournis sont synthétiques, et les 92 tests passent hors ligne. Les limites
+Les 7 échantillons fournis sont synthétiques, et les 93 tests passent hors ligne. Les limites
 sont listées plus haut : le score est heuristique et non validé sur un corpus réel, et la
 signature DKIM n'est pas re-vérifiée. Voir **LEARN.md** pour les explications détaillées en français.
 

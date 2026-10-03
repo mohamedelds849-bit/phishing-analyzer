@@ -117,3 +117,14 @@ def test_attack_ids_are_current_v19():
     from phishing_analyzer.models import ATTACK
     assert "T1656" not in ATTACK and "T1672" not in ATTACK  # revoked in ATT&CK v19
     assert ATTACK["T1684.001"].endswith("Impersonation")
+
+
+def test_spf_qualifier_is_token_based():
+    from phishing_analyzer.dns_check import spf_qualifier
+    assert spf_qualifier("v=spf1 include:_spf.google.com ~all") == "~all"
+    assert spf_qualifier("v=spf1 ip4:192.0.2.1 -all") == "-all"
+    assert spf_qualifier("v=spf1 +all") == "+all"
+    assert spf_qualifier("v=spf1 all") == "+all"
+    # "all" inside a domain name is not the all mechanism
+    assert spf_qualifier("v=spf1 include:spf.all-mail.example") is None
+    assert spf_qualifier("v=spf1 redirect=x-all.example") is None
