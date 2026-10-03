@@ -1,0 +1,43 @@
+Return-Path: <notification@attijariwafabnak.test>
+Received: from mx-in.corp.example (mx-in.corp.example [10.0.0.5]) by
+ mbox.corp.example with LMTP; Thu, 17 Sep 2026 09:31:05 +0000
+Received: from mail.attijariwafabnak.test (mail.attijariwafabnak.test
+ [203.0.113.21]) by mx-in.corp.example with ESMTPS id 1Q2W3E; Thu, 17 Sep 2026
+ 09:31:03 +0000
+Authentication-Results: mx-in.corp.example; spf=pass
+ smtp.mailfrom=attijariwafabnak.test; dkim=pass
+ header.d=attijariwafabnak.test; dmarc=pass header.from=attijariwafabnak.test
+From: Attijariwafa bank <notification@attijariwafabnak.test>
+To: client@corp.example
+Subject: Mise a jour de securite de votre espace client
+Date: Thu, 17 Sep 2026 09:31:00 +0000
+Message-ID: <20260917093100.77@attijariwafabnak.test>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="=_sample_boundary_0_="
+
+--=_sample_boundary_0_=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Cher client,
+
+Dans le cadre du renforcement de la securite, nous vous invitons a mettre a j=
+our vos informations avant le 30 septembre.
+Acceder a mon espace : https://attijariwafabnak.test/espace-client
+
+Cordialement,
+Service Clientele
+
+--=_sample_boundary_0_=
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html><body><p>Cher client,</p><p>Dans le cadre du renforcement de la s&eacut=
+e;curit&eacute;, nous vous invitons &agrave; mettre &agrave; jour vos informa=
+tions avant le 30 septembre.</p><p><a href=3D"https://attijariwafabnak.test/e=
+space-client">Acc&eacute;der &agrave; mon espace</a></p><p>Suivi de votre dem=
+ande : <a href=3D"https://xn--attijariwafabnk-6lm.test/suivi">suivi de la dem=
+ande</a></p><p>Cordialement,<br>Service Client&egrave;le</p></body></html>
+
+--=_sample_boundary_0_=--

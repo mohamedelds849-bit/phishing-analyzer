@@ -1,0 +1,3 @@
+# keep sample bytes identical on every platform (hashes in README depend on them)
+*.eml binary
+* text=auto eol=lf

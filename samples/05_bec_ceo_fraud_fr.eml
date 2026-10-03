@@ -1,0 +1,33 @@
+Return-Path: <karim.testouni.pdg@direction-acme.test>
+Received: from mx-in.acme-maroc.example (mx-in.acme-maroc.example [10.1.0.5])
+ by mbox.acme-maroc.example with LMTP; Mon, 21 Sep 2026 10:47:33 +0100
+Received: from mail.direction-acme.test (mail.direction-acme.test
+ [198.51.100.140]) by mx-in.acme-maroc.example with ESMTPS id 8I9O0P; Mon, 21
+ Sep 2026 10:47:31 +0100
+Authentication-Results: mx-in.acme-maroc.example; spf=pass
+ smtp.mailfrom=direction-acme.test; dkim=pass header.d=direction-acme.test;
+ dmarc=pass header.from=direction-acme.test
+From: Karim Testouni - PDG <karim.testouni.pdg@direction-acme.test>
+Reply-To: k.testouni@securemail-pdg.test
+To: Salma - Comptabilite <comptabilite@acme-maroc.example>
+Subject: Demande confidentielle
+Date: Mon, 21 Sep 2026 10:47:25 +0100
+Message-ID: <CAF-31337@direction-acme.test>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Bonjour Salma,
+
+Je suis en reunion avec nos partenaires et je ne suis pas joignable par telep=
+hone.
+J'ai besoin que tu effectues aujourd'hui meme un virement urgent de 185 000 M=
+AD pour finaliser une acquisition. Utilise le nouveau RIB ci-dessous :
+
+IBAN : MA00 0000 0000 0000 0000 0000 000 (fictif)
+
+Ce dossier est strictement confidentiel, n'en parle a personne pour l'instant.
+Envoie-moi la confirmation des que possible.
+
+Karim
+Envoye de mon mobile

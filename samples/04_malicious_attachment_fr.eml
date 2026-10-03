@@ -1,0 +1,55 @@
+Return-Path: <noreply@dhl-livraison.test>
+Received: from mx-in.corp.example (mx-in.corp.example [10.0.0.5]) by
+ mbox.corp.example with LMTP; Fri, 18 Sep 2026 14:02:11 +0000
+Received: from smtp.dhl-livraison.test (unknown [203.0.113.99]) by
+ mx-in.corp.example with ESMTP id 5T6Y7U; Fri, 18 Sep 2026 14:02:09 +0000
+Authentication-Results: mx-in.corp.example; spf=softfail
+ smtp.mailfrom=dhl-livraison.test; dkim=none; dmarc=none
+ header.from=dhl-livraison.test
+From: DHL Express <noreply@dhl-livraison.test>
+To: logistique@corp.example
+Subject: Avis de livraison - colis en attente de paiement
+Date: Fri, 18 Sep 2026 14:02:00 +0000
+Message-ID: <avis-55120@dhl-livraison.test>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="=_sample_boundary_0_="
+
+--=_sample_boundary_0_=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Bonjour,
+
+Votre colis est bloque en douane. Merci d'ouvrir la facture jointe et de proc=
+eder au paiement des frais sous 48h, sinon le colis sera retourne a l'expedit=
+eur.
+
+DHL Express
+
+--=_sample_boundary_0_=
+Content-Type: application/octet-stream
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="Facture_DHL_0918.pdf.exe"
+MIME-Version: 1.0
+
+SEFSTUxFU1MgRFVNTVkgQVRUQUNITUVOVCBmb3IgcGhpc2hpbmctYW5hbHl6ZXIgdGVzdHMuClRo
+aXMgZmlsZSBjb250YWlucyBubyBjb2RlLiBJdCBvbmx5IGV4aXN0cyBzbyB0aGUgYW5hbHl6ZXIg
+Y2FuIGhhc2ggaXQuCg==
+
+--=_sample_boundary_0_=
+Content-Type: application/vnd.ms-word.document.macroEnabled.12
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="Bordereau_livraison.docm"
+MIME-Version: 1.0
+
+UEsDBBQAAAAAALUDQ13HHBc8CAAAAAgAAAATAAAAW0NvbnRlbnRfVHlwZXNdLnhtbDxUeXBlcy8+
+UEsDBBQAAAAAALUDQ13dWoYNDQAAAA0AAAARAAAAd29yZC9kb2N1bWVudC54bWw8dzpkb2N1bWVu
+dC8+UEsDBBQAAAAAALUDQ11ioXWgfwAAAH8AAAATAAAAd29yZC92YmFQcm9qZWN0LmJpbkhBUk1M
+RVNTIERVTU1ZIEFUVEFDSE1FTlQgZm9yIHBoaXNoaW5nLWFuYWx5emVyIHRlc3RzLgpUaGlzIGZp
+bGUgY29udGFpbnMgbm8gY29kZS4gSXQgb25seSBleGlzdHMgc28gdGhlIGFuYWx5emVyIGNhbiBo
+YXNoIGl0LgpQSwECFAAUAAAAAAC1A0NdxxwXPAgAAAAIAAAAEwAAAAAAAAAAAAAAgAEAAAAAW0Nv
+bnRlbnRfVHlwZXNdLnhtbFBLAQIUABQAAAAAALUDQ13dWoYNDQAAAA0AAAARAAAAAAAAAAAAAACA
+ATkAAAB3b3JkL2RvY3VtZW50LnhtbFBLAQIUABQAAAAAALUDQ11ioXWgfwAAAH8AAAATAAAAAAAA
+AAAAAACAAXUAAAB3b3JkL3ZiYVByb2plY3QuYmluUEsFBgAAAAADAAMAwQAAACUBAAAAAA==
+
+--=_sample_boundary_0_=--

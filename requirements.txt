@@ -1,0 +1,3 @@
+# Runtime: the analyzer itself uses only the Python 3.11 standard library.
+# Optional - needed ONLY for the --online flag (live SPF/DMARC DNS lookups):
+dnspython>=2.4

@@ -1,0 +1,24 @@
+Return-Path: <notify@partner-docs.test>
+Received: from mx-in.corp.example (mx-in.corp.example [10.0.0.5]) by
+ mbox.corp.example with LMTP; Wed, 23 Sep 2026 16:20:12 +0000
+Received: from out.partner-docs.test (out.partner-docs.test [198.51.100.77])
+ by mx-in.corp.example with ESMTPS id 6Y7U8I; Wed, 23 Sep 2026 16:20:10 +0000
+Authentication-Results: mx-in.corp.example; spf=softfail
+ smtp.mailfrom=partner-docs.test; dkim=pass header.d=partner-docs.test;
+ dmarc=none header.from=partner-docs.test
+From: Partner Docs <notify@partner-docs.test>
+Reply-To: sales-office@freemail-box.test
+To: achats@corp.example
+Subject: Nouveau document partage : Proposition commerciale Q4
+Date: Wed, 23 Sep 2026 16:20:05 +0000
+Message-ID: <doc-8812@partner-docs.test>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+Bonjour,
+
+Un document vous a ete partage : Proposition_Q4.pdf
+Le lien reste actif sous 72h : https://share.partner-docs.test/d/8812
+
+Pour toute question, repondez simplement a ce message.

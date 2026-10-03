@@ -1,0 +1,545 @@
+{
+  "tool": {
+    "name": "phishing-analyzer",
+    "version": "1.0.0"
+  },
+  "analyzed_at": "2026-10-03T00:36:50+00:00",
+  "source": "samples\\02_obvious_phishing.eml",
+  "message": {
+    "sha256": "d98dbe2cba79e5c11d524957ce971c551ff7b0acd73fb55e0a58135af147a2ff",
+    "size": 1674,
+    "subject": "URGENT: Your account has been suspended",
+    "from": {
+      "display_name": "PayPal Service",
+      "address": "service@paypa1.test",
+      "domain": "paypa1.test"
+    },
+    "reply_to": [
+      {
+        "display_name": "",
+        "address": "verify-team@mailbox-help.test",
+        "domain": "mailbox-help.test"
+      }
+    ],
+    "return_path": {
+      "display_name": "",
+      "address": "bounce@bulk-sender.test",
+      "domain": "bulk-sender.test"
+    },
+    "to": [
+      {
+        "display_name": "",
+        "address": "victim@corp.example",
+        "domain": "corp.example"
+      }
+    ],
+    "cc": [],
+    "date": "Wed, 16 Sep 2026 02:14:30 +0000",
+    "message_id": "<0001.abc@vps-4471.bulk-sender.test>",
+    "parse_defects": []
+  },
+  "authentication": {
+    "spf": "fail",
+    "dkim": "none",
+    "dmarc": "fail",
+    "source": "Authentication-Results",
+    "authserv_id": "mx-in.corp.example",
+    "dkim_domains": [],
+    "smtp_mailfrom": "bulk-sender.test",
+    "ignored_headers": 0,
+    "requested_authserv_id": null,
+    "requested_authserv_found": null
+  },
+  "dns": null,
+  "received_chain": [
+    {
+      "index": 1,
+      "from_host": "vps-4471.bulk-sender.test",
+      "from_ip": "203.0.113.66",
+      "by_host": "mx-in.corp.example",
+      "timestamp": "2026-09-16T02:14:38+00:00",
+      "delay_seconds": null,
+      "raw": "from vps-4471.bulk-sender.test (unknown [203.0.113.66]) by mx-in.corp.example with ESMTP id 9F8E7D; Wed, 16 Sep 2026 02:14:38 +0000"
+    },
+    {
+      "index": 2,
+      "from_host": "mx-in.corp.example",
+      "from_ip": "10.0.0.5",
+      "by_host": "mbox.corp.example",
+      "timestamp": "2026-09-16T02:14:40+00:00",
+      "delay_seconds": 2.0,
+      "raw": "from mx-in.corp.example (mx-in.corp.example [10.0.0.5]) by mbox.corp.example with LMTP; Wed, 16 Sep 2026 02:14:40 +0000"
+    }
+  ],
+  "urls": [
+    {
+      "url": "https://www.paypal.com@198.51.100.7/verify",
+      "source": "text",
+      "anchor_text": "",
+      "host": "198.51.100.7",
+      "flags": [
+        "url_ip_host",
+        "url_userinfo_at"
+      ]
+    },
+    {
+      "url": "http://192.0.2.45/paypal/login.php",
+      "source": "html-href",
+      "anchor_text": "https://www.paypal.com/signin",
+      "host": "192.0.2.45",
+      "flags": [
+        "url_ip_host",
+        "url_text_mismatch"
+      ]
+    },
+    {
+      "url": "https://www.paypal.com@198.51.100.7/verify",
+      "source": "html-href",
+      "anchor_text": "secure verification",
+      "host": "198.51.100.7",
+      "flags": [
+        "url_ip_host",
+        "url_userinfo_at"
+      ]
+    },
+    {
+      "url": "https://www.paypal.com/signin",
+      "source": "html-text",
+      "anchor_text": "",
+      "host": "www.paypal.com",
+      "flags": []
+    }
+  ],
+  "attachments": [],
+  "keyword_hits": {
+    "urgency": [
+      "urgent",
+      "within 24 hours"
+    ],
+    "threat": [
+      "account has been suspended",
+      "unusual activity"
+    ],
+    "credential": [
+      "verify your account",
+      "confirm your password",
+      "password"
+    ]
+  },
+  "findings": [
+    {
+      "id": "dmarc_fail",
+      "category": "auth",
+      "title": "DMARC failed",
+      "severity": "high",
+      "weight": 30,
+      "why": "DMARC checks that the visible From: domain is backed by an aligned SPF or DKIM pass. A failure means the sender is very likely NOT the domain shown in From: (direct domain spoofing).",
+      "evidence": "spf=fail dkim=none dmarc=fail (authserv-id=mx-in.corp.example)",
+      "attack": [
+        {
+          "id": "T1656",
+          "name": "Impersonation"
+        },
+        {
+          "id": "T1566",
+          "name": "Phishing"
+        }
+      ],
+      "iocs": []
+    },
+    {
+      "id": "lookalike_homoglyph",
+      "category": "lookalike",
+      "title": "Homoglyph lookalike domain (From address)",
+      "severity": "high",
+      "weight": 30,
+      "why": "Attackers register domains that look like a trusted brand so the address passes a quick glance (and even SPF/DKIM/DMARC, since they own the domain). 'paypa1' uses look-alike characters to imitate 'paypal' (PayPal).",
+      "evidence": "paypa1.test",
+      "attack": [
+        {
+          "id": "T1583.001",
+          "name": "Acquire Infrastructure: Domains"
+        },
+        {
+          "id": "T1656",
+          "name": "Impersonation"
+        }
+      ],
+      "iocs": [
+        "paypa1.test"
+      ]
+    },
+    {
+      "id": "url_text_mismatch",
+      "category": "url",
+      "title": "Link text shows a different domain than its target",
+      "severity": "high",
+      "weight": 25,
+      "why": "The visible link text displays one domain while the underlying href goes to another. This is the core trick of link-based phishing.",
+      "evidence": "text='https://www.paypal.com/signin'  ->  href=http://192.0.2.45/paypal/login.php",
+      "attack": [
+        {
+          "id": "T1566.002",
+          "name": "Phishing: Spearphishing Link"
+        },
+        {
+          "id": "T1204.001",
+          "name": "User Execution: Malicious Link"
+        }
+      ],
+      "iocs": [
+        "http://192.0.2.45/paypal/login.php",
+        "192.0.2.45"
+      ]
+    },
+    {
+      "id": "brand_display_name",
+      "category": "header",
+      "title": "Display name impersonates PayPal",
+      "severity": "high",
+      "weight": 20,
+      "why": "The sender name says 'PayPal Service' but the address domain 'paypa1.test' is not one of PayPal's official domains (paypal.com, paypal.fr, paypal.me).",
+      "evidence": "display='PayPal Service'  real=<service@paypa1.test>",
+      "attack": [
+        {
+          "id": "T1656",
+          "name": "Impersonation"
+        }
+      ],
+      "iocs": [
+        "paypa1.test"
+      ]
+    },
+    {
+      "id": "reply_to_mismatch",
+      "category": "header",
+      "title": "Reply-To points to a different domain",
+      "severity": "medium",
+      "weight": 20,
+      "why": "Replies will go to a different organisation than the visible sender. Attackers use this so the victim's answer (or payment confirmation) reaches a mailbox they control, while From: looks trustworthy.",
+      "evidence": "From=paypa1.test  Reply-To=verify-team@mailbox-help.test",
+      "attack": [
+        {
+          "id": "T1656",
+          "name": "Impersonation"
+        },
+        {
+          "id": "T1566",
+          "name": "Phishing"
+        }
+      ],
+      "iocs": [
+        "mailbox-help.test"
+      ]
+    },
+    {
+      "id": "url_ip_host",
+      "category": "url",
+      "title": "Link points to a raw IP address",
+      "severity": "medium",
+      "weight": 20,
+      "why": "Legitimate brands link to their domain names. A bare IP avoids domain reputation checks and is typical of phishing kits hosted on compromised servers.",
+      "evidence": "https://www.paypal.com@198.51.100.7/verify",
+      "attack": [
+        {
+          "id": "T1566.002",
+          "name": "Phishing: Spearphishing Link"
+        },
+        {
+          "id": "T1204.001",
+          "name": "User Execution: Malicious Link"
+        }
+      ],
+      "iocs": [
+        "https://www.paypal.com@198.51.100.7/verify",
+        "198.51.100.7"
+      ]
+    },
+    {
+      "id": "url_ip_host",
+      "category": "url",
+      "title": "Link points to a raw IP address",
+      "severity": "medium",
+      "weight": 20,
+      "why": "Legitimate brands link to their domain names. A bare IP avoids domain reputation checks and is typical of phishing kits hosted on compromised servers.",
+      "evidence": "http://192.0.2.45/paypal/login.php",
+      "attack": [
+        {
+          "id": "T1566.002",
+          "name": "Phishing: Spearphishing Link"
+        },
+        {
+          "id": "T1204.001",
+          "name": "User Execution: Malicious Link"
+        }
+      ],
+      "iocs": [
+        "http://192.0.2.45/paypal/login.php",
+        "192.0.2.45"
+      ]
+    },
+    {
+      "id": "url_ip_host",
+      "category": "url",
+      "title": "Link points to a raw IP address",
+      "severity": "medium",
+      "weight": 20,
+      "why": "Legitimate brands link to their domain names. A bare IP avoids domain reputation checks and is typical of phishing kits hosted on compromised servers.",
+      "evidence": "https://www.paypal.com@198.51.100.7/verify",
+      "attack": [
+        {
+          "id": "T1566.002",
+          "name": "Phishing: Spearphishing Link"
+        },
+        {
+          "id": "T1204.001",
+          "name": "User Execution: Malicious Link"
+        }
+      ],
+      "iocs": [
+        "https://www.paypal.com@198.51.100.7/verify",
+        "198.51.100.7"
+      ]
+    },
+    {
+      "id": "url_userinfo_at",
+      "category": "url",
+      "title": "'@' in URL hides the real destination",
+      "severity": "medium",
+      "weight": 20,
+      "why": "Everything before '@' in a URL authority is a username; the browser goes to the host AFTER the '@'. 'https://www.bank.com@evil.test/' really opens evil.test.",
+      "evidence": "https://www.paypal.com@198.51.100.7/verify",
+      "attack": [
+        {
+          "id": "T1566.002",
+          "name": "Phishing: Spearphishing Link"
+        }
+      ],
+      "iocs": [
+        "https://www.paypal.com@198.51.100.7/verify",
+        "198.51.100.7"
+      ]
+    },
+    {
+      "id": "url_userinfo_at",
+      "category": "url",
+      "title": "'@' in URL hides the real destination",
+      "severity": "medium",
+      "weight": 20,
+      "why": "Everything before '@' in a URL authority is a username; the browser goes to the host AFTER the '@'. 'https://www.bank.com@evil.test/' really opens evil.test.",
+      "evidence": "https://www.paypal.com@198.51.100.7/verify",
+      "attack": [
+        {
+          "id": "T1566.002",
+          "name": "Phishing: Spearphishing Link"
+        }
+      ],
+      "iocs": [
+        "https://www.paypal.com@198.51.100.7/verify",
+        "198.51.100.7"
+      ]
+    },
+    {
+      "id": "kw_credential",
+      "category": "content",
+      "title": "Credential / personal-data request",
+      "severity": "medium",
+      "weight": 15,
+      "why": "The message asks the reader to log in, confirm or 'update' secrets. Legitimate services do not request passwords, OTP codes or card numbers by e-mail.",
+      "evidence": "matched: 'verify your account', 'confirm your password', 'password'",
+      "attack": [
+        {
+          "id": "T1598.003",
+          "name": "Phishing for Information: Spearphishing Link"
+        }
+      ],
+      "iocs": []
+    },
+    {
+      "id": "spf_fail",
+      "category": "auth",
+      "title": "SPF failed",
+      "severity": "medium",
+      "weight": 15,
+      "why": "The sending server's IP is not authorised by the envelope-sender domain's SPF record (-all). The message did not come from that domain's infrastructure.",
+      "evidence": "spf=fail dkim=none dmarc=fail (authserv-id=mx-in.corp.example)",
+      "attack": [
+        {
+          "id": "T1566",
+          "name": "Phishing"
+        }
+      ],
+      "iocs": []
+    },
+    {
+      "id": "kw_threat",
+      "category": "content",
+      "title": "Account threat / fear lure",
+      "severity": "low",
+      "weight": 10,
+      "why": "Threatening suspension, closure or legal action creates fear so the victim complies.",
+      "evidence": "matched: 'account has been suspended', 'unusual activity'",
+      "attack": [
+        {
+          "id": "T1566",
+          "name": "Phishing"
+        }
+      ],
+      "iocs": []
+    },
+    {
+      "id": "kw_urgency",
+      "category": "content",
+      "title": "Urgency pressure",
+      "severity": "low",
+      "weight": 10,
+      "why": "Artificial deadlines push the reader to act before thinking or checking with a colleague.",
+      "evidence": "matched: 'urgent', 'within 24 hours'",
+      "attack": [
+        {
+          "id": "T1566",
+          "name": "Phishing"
+        }
+      ],
+      "iocs": []
+    },
+    {
+      "id": "return_path_mismatch",
+      "category": "header",
+      "title": "Return-Path differs from From domain",
+      "severity": "low",
+      "weight": 5,
+      "why": "The envelope sender (bounce address) belongs to another domain. This is NORMAL for newsletters sent through an e-mail service provider, so it is low weight; it matters when combined with failed SPF/DMARC.",
+      "evidence": "From=paypa1.test  Return-Path=bounce@bulk-sender.test",
+      "attack": [
+        {
+          "id": "T1566",
+          "name": "Phishing"
+        }
+      ],
+      "iocs": []
+    },
+    {
+      "id": "message_id_mismatch",
+      "category": "header",
+      "title": "Message-ID domain differs from From",
+      "severity": "low",
+      "weight": 3,
+      "why": "The Message-ID was generated by a host of another domain. Common with third-party senders; weak signal on its own.",
+      "evidence": "Message-ID domain=vps-4471.bulk-sender.test From=paypa1.test",
+      "attack": [],
+      "iocs": []
+    }
+  ],
+  "score": 100,
+  "score_breakdown": {
+    "dmarc_fail": 30,
+    "lookalike_homoglyph": 30,
+    "url_text_mismatch": 25,
+    "brand_display_name": 20,
+    "reply_to_mismatch": 20,
+    "url_ip_host": 20,
+    "url_userinfo_at": 20,
+    "kw_credential": 15,
+    "spf_fail": 15,
+    "kw_threat": 10,
+    "kw_urgency": 10,
+    "return_path_mismatch": 5,
+    "message_id_mismatch": 3
+  },
+  "verdict": "Likely phishing",
+  "attack_techniques": [
+    {
+      "id": "T1204.001",
+      "name": "User Execution: Malicious Link"
+    },
+    {
+      "id": "T1566",
+      "name": "Phishing"
+    },
+    {
+      "id": "T1566.002",
+      "name": "Phishing: Spearphishing Link"
+    },
+    {
+      "id": "T1583.001",
+      "name": "Acquire Infrastructure: Domains"
+    },
+    {
+      "id": "T1598.003",
+      "name": "Phishing for Information: Spearphishing Link"
+    },
+    {
+      "id": "T1656",
+      "name": "Impersonation"
+    }
+  ],
+  "iocs": {
+    "subject": "URGENT: Your account has been suspended",
+    "sender_addresses": [
+      "bounce@bulk-sender.test",
+      "service@paypa1.test",
+      "verify-team@mailbox-help.test"
+    ],
+    "domains": [
+      {
+        "value": "paypa1.test",
+        "defanged": "paypa1[.]test",
+        "flagged": true
+      },
+      {
+        "value": "mailbox-help.test",
+        "defanged": "mailbox-help[.]test",
+        "flagged": true
+      },
+      {
+        "value": "bulk-sender.test",
+        "defanged": "bulk-sender[.]test",
+        "flagged": false
+      },
+      {
+        "value": "www.paypal.com",
+        "defanged": "www[.]paypal[.]com",
+        "flagged": false
+      }
+    ],
+    "urls": [
+      {
+        "value": "https://www.paypal.com@198.51.100.7/verify",
+        "defanged": "hxxps://www[.]paypal[.]com@198[.]51[.]100[.]7/verify",
+        "flagged": true
+      },
+      {
+        "value": "http://192.0.2.45/paypal/login.php",
+        "defanged": "hxxp://192[.]0[.]2[.]45/paypal/login.php",
+        "flagged": true
+      },
+      {
+        "value": "https://www.paypal.com/signin",
+        "defanged": "hxxps://www[.]paypal[.]com/signin",
+        "flagged": false
+      }
+    ],
+    "ips": [
+      {
+        "value": "198.51.100.7",
+        "defanged": "198[.]51[.]100[.]7",
+        "flagged": true,
+        "source": "url"
+      },
+      {
+        "value": "192.0.2.45",
+        "defanged": "192[.]0[.]2[.]45",
+        "flagged": true,
+        "source": "url"
+      },
+      {
+        "value": "203.0.113.66",
+        "defanged": "203[.]0[.]113[.]66",
+        "flagged": false,
+        "source": "received-chain"
+      }
+    ],
+    "hashes": []
+  }
+}

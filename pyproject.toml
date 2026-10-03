@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phishing-analyzer"
+version = "1.0.0"
+description = "Offline SOC L1 triage of suspicious .eml files: risk score, explained findings, IOCs"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "Mohamed Elansari"}]
+dependencies = []
+
+[project.optional-dependencies]
+online = ["dnspython>=2.4"]
+dev = ["pytest>=7"]
+
+[project.scripts]
+phishing-analyzer = "phishing_analyzer.cli:main"
+
+[tool.setuptools]
+packages = ["phishing_analyzer"]
+
+[tool.setuptools.package-data]
+phishing_analyzer = ["data/*.json"]

@@ -1,0 +1,29 @@
+{
+  "_comment": "Protected brands. 'domains' = official domains (exact or parent of the host => never flagged). 'keywords' = strings compared against hostname labels (typo/homoglyph checks only for keywords >= 6 chars). 'display_names' = words matched in the From display name. Verify official domains for your own organisation before production use; this list is a starting point, not authoritative.",
+  "brands": [
+    {"name": "Attijariwafa bank", "domains": ["attijariwafabank.com", "attijarinet.com"], "keywords": ["attijariwafabank", "attijariwafa", "attijari"], "display_names": ["attijariwafa", "attijari"]},
+    {"name": "Bank of Africa (BMCE)", "domains": ["bankofafrica.ma", "bmcebank.ma"], "keywords": ["bankofafrica", "bmcebank", "bmce"], "display_names": ["bank of africa", "bmce"]},
+    {"name": "CIH Bank", "domains": ["cihbank.ma"], "keywords": ["cihbank", "cih"], "display_names": ["cih bank", "cih"]},
+    {"name": "Banque Populaire", "domains": ["groupebcp.com"], "keywords": ["banquepopulaire", "groupebcp", "chaabi"], "display_names": ["banque populaire", "chaabi"]},
+    {"name": "BMCI", "domains": ["bmci.ma"], "keywords": ["bmci"], "display_names": ["bmci"]},
+    {"name": "Credit du Maroc", "domains": ["cdm.co.ma"], "keywords": ["creditdumaroc"], "display_names": ["credit du maroc"]},
+    {"name": "Societe Generale Maroc", "domains": ["sgmaroc.com"], "keywords": ["sgmaroc", "societegenerale"], "display_names": ["societe generale"]},
+    {"name": "Al Barid Bank / Barid Al-Maghrib", "domains": ["albaridbank.ma", "poste.ma"], "keywords": ["albaridbank", "baridbank", "baridalmaghrib"], "display_names": ["al barid", "barid al-maghrib", "barid al maghrib"]},
+    {"name": "Maroc Telecom", "domains": ["iam.ma"], "keywords": ["maroctelecom", "iam"], "display_names": ["maroc telecom"]},
+    {"name": "inwi", "domains": ["inwi.ma"], "keywords": ["inwi"], "display_names": ["inwi"]},
+    {"name": "Orange", "domains": ["orange.ma", "orange.fr", "orange.com"], "keywords": ["orange"], "display_names": ["orange"]},
+    {"name": "DGI (impots Maroc)", "domains": ["tax.gov.ma"], "keywords": ["taxgov", "dgi"], "display_names": ["dgi", "direction generale des impots"]},
+    {"name": "CNSS", "domains": ["cnss.ma"], "keywords": ["cnss"], "display_names": ["cnss"]},
+    {"name": "PayPal", "domains": ["paypal.com", "paypal.fr", "paypal.me"], "keywords": ["paypal"], "display_names": ["paypal"]},
+    {"name": "Microsoft", "domains": ["microsoft.com", "office.com", "office365.com", "live.com", "outlook.com", "microsoftonline.com", "sharepoint.com", "onmicrosoft.com"], "keywords": ["microsoft", "office365", "microsoft365", "m365", "outlook", "sharepoint"], "display_names": ["microsoft", "office 365", "microsoft 365", "outlook", "sharepoint"]},
+    {"name": "Google", "domains": ["google.com", "gmail.com", "googlemail.com", "youtube.com"], "keywords": ["google", "gmail"], "display_names": ["google", "gmail"]},
+    {"name": "Apple", "domains": ["apple.com", "icloud.com"], "keywords": ["apple", "icloud"], "display_names": ["apple", "icloud"]},
+    {"name": "Amazon", "domains": ["amazon.com", "amazon.fr", "amazon.de", "amazon.co.uk"], "keywords": ["amazon"], "display_names": ["amazon"]},
+    {"name": "DHL", "domains": ["dhl.com", "dhl.de", "dhl.fr"], "keywords": ["dhl"], "display_names": ["dhl"]},
+    {"name": "Netflix", "domains": ["netflix.com"], "keywords": ["netflix"], "display_names": ["netflix"]},
+    {"name": "Meta / Facebook", "domains": ["facebook.com", "facebookmail.com", "meta.com", "instagram.com"], "keywords": ["facebook", "instagram"], "display_names": ["facebook", "instagram", "meta"]},
+    {"name": "LinkedIn", "domains": ["linkedin.com"], "keywords": ["linkedin"], "display_names": ["linkedin"]},
+    {"name": "DocuSign", "domains": ["docusign.com", "docusign.net"], "keywords": ["docusign"], "display_names": ["docusign"]},
+    {"name": "WeTransfer", "domains": ["wetransfer.com"], "keywords": ["wetransfer"], "display_names": ["wetransfer"]}
+  ]
+}
